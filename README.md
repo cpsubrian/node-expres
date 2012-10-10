@@ -1,4 +1,4 @@
-expres
+expRes
 ======
 
 Add express compatible methods to a response object.

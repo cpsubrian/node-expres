@@ -1,3 +1,4 @@
+var url = require('url');
 var expres = module.exports = {};
 
 expres.middleware = function (req, res, next) {
@@ -209,6 +210,11 @@ expres.methods = {
     }
 
     var body = JSON.stringify(obj, null, 2);
+
+    if (!this.req.query) {
+      this.req.query = url.parse(this.req.url, true).query;
+    }
+
     var callback = this.req.query['callback'];
 
     // content-type
@@ -216,7 +222,7 @@ expres.methods = {
 
     // jsonp
     if (callback) {
-      this.set('Content-Type', 'text/javascript');
+      this.set('Content-Type', 'text/javascript; charset=utf-8');
       body = callback.replace(/[^\[\]\w$.]/g, '') + '(' + body + ');';
     }
 
