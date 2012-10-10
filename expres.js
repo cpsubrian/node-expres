@@ -3,15 +3,13 @@ var url = require('url')
   , expres = module.exports = {};
 
 expres.middleware = function (req, res, next) {
-  var ctx = res;
-
-  if (!ctx.req) ctx.req = req;
-  if (!ctx.next) ctx.next = next;
+  if (!res.req) res.req = req;
+  if (!res.next) res.next = next;
 
   Object.keys(expres.methods).forEach( function (method) {
     // We don't override existing methods.
     if (typeof res[method] === 'undefined') {
-      res[method] = expres.methods[method].bind(ctx);
+      res[method] = expres.methods[method].bind(res);
     }
   });
 
@@ -232,14 +230,7 @@ expres.methods = {
 
   /**
    * Respond to the Acceptable formats using an `obj`
-   * of mime-type callbacks.
-   *
-   * This method uses `req.accepted`, an array of
-   * acceptable types ordered by their quality values.
-   * When "Accept" is not present the _first_ callback
-   * is invoked, otherwise the first match is used. When
-   * no match is performed the server responds with
-   * 406 "Not Acceptable".
+   * of content-type callbacks.
    *
    * Content-Type is set for you, however if you choose
    * you may alter this within the callback using `res.type()`
@@ -336,7 +327,7 @@ expres.methods = {
    * defaulting to 302.
    *
    * The given `url` can also be the name of a mapped url, for
-   * example by default express supports "back" which redirects
+   * example by default expres supports "back" which redirects
    * to the _Referrer_ or _Referer_ headers or "/".
    *
    * Examples:
@@ -346,19 +337,6 @@ expres.methods = {
    *    res.redirect(301, 'http://example.com');
    *    res.redirect('http://example.com', 301);
    *    res.redirect('../login'); // /blog/post/1 -> /blog/login
-   *
-   * Mounting:
-   *
-   *   When an application is mounted, and `res.redirect()`
-   *   is given a path that does _not_ lead with "/". For
-   *   example suppose a "blog" app is mounted at "/blog",
-   *   the following redirect would result in "/blog/login":
-   *
-   *      res.redirect('login');
-   *
-   *   While the leading slash would result in a redirect to "/login":
-   *
-   *      res.redirect('/login');
    *
    * @param {String} toUrl
    * @param {Number} code
@@ -387,6 +365,7 @@ expres.methods = {
 
     // relative
     if (!~toUrl.indexOf('://') && 0 != toUrl.indexOf('//')) {
+      // In express this fetches the app's mount point (root).
       var path = '';
 
       // relative to path
