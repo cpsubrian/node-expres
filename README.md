@@ -1,15 +1,132 @@
 expRes
 ======
 
-Add express compatible methods to a response object.
+Middleware to add express compatible methods to your response objects.
 
 [![build status](https://secure.travis-ci.org/cpsubrian/node-expres.png)](http://travis-ci.org/cpsubrian/node-expres)
+
+Usage
+-----
+
+```js
+var expres = require('expres'),
+    server = http.createServer();
+
+server.on('request', expres.middleware);
+```
+
+Response Methods Added
+----------------------
+
+### status(code)
+Set status `code`.
+@param {Number} code
+@return {ServerResponse}
+
+### links(links)
+
+Set Link header field with the given `links`.
+
+    res.links({
+      next: 'http://api.example.com/users?page=2',
+      last: 'http://api.example.com/users?page=5'
+    });
+
+### type(type)
+
+Set the Content-Type to `type`.
+
+    res.type('application/json');
+
+### send(body|status, [body])
+
+Send a response.
+
+    res.send(new Buffer('wahoo'));
+    res.send({ some: 'json' });
+    res.send('<p>some html</p>');
+    res.send(404, 'Sorry, cant find that');
+    res.send(404);
+
+### json(obj|status, [obj])
+
+Send JSON response.
+
+    res.json(null);
+    res.json({ user: 'tj' });
+    res.json(500, 'oh noes!');
+    res.json(404, 'I dont have that');
+
+### jsonp(obj|status, [obj])
+
+Send JSON response with JSONP callback support.
+
+    res.jsonp(null);
+    res.jsonp({ user: 'tj' });
+    res.jsonp(500, 'oh noes!');
+    res.jsonp(404, 'I dont have that');
+
+### format(obj)
+
+Respond to the Acceptable formats using an `obj`
+of content-type callbacks.
+
+Content-Type is set for you, however if you choose
+you may alter this within the callback using `res.type()`
+or `res.set('Content-Type', ...)`.
+
+    res.format({
+      'text/plain'(){
+        res.send('hey');
+      },
+      'text/html'(){
+        res.send('<p>hey</p>');
+      },
+      'appliation/json'(){
+        res.send({ message: 'hey' });
+      }
+    });
+
+By default expres passes an `Error`
+with a `.status` of 406 to `next(err)`
+if a match is not made. If you provide
+a `.default` callback it will be invoked
+instead.
+
+### set(field, [val])
+
+Set header `field` to `val`, or pass
+an object of header fields.
+
+    res.set('Accept', 'application/json');
+    res.set({ Accept: 'text/plain', 'X-API-Key': 'tobi' });
+
+Aliased as `res.header()`.
+
+### get(field)
+
+Get value for header `field`.
+
+### redirect(toUrl, [status])
+
+Redirect to the given `url` with optional response `status`
+defaulting to 302.
+
+The given `url` can also be the name of a mapped url, for
+example by default expres supports "back" which redirects
+to the _Referrer_ or _Referer_ headers or "/".
+
+    res.redirect('/foo/bar');
+    res.redirect('http://example.com');
+    res.redirect(301, 'http://example.com');
+    res.redirect('http://example.com', 301);
+    res.redirect('../login'); // /blog/post/1 -> /blog/login
 
 
 Credit
 ------
 
-Many of the methods are copied verbatim from express, so, thanks TJ :)
+Many of the methods and tests are copied verbatim from express, so, thanks TJ :)
 
 - - -
 
