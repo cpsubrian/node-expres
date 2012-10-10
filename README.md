@@ -10,9 +10,11 @@ Usage
 
 ```js
 var expres = require('expres'),
-    server = http.createServer();
+    server = require('http').createServer();
 
 server.on('request', expres.middleware);
+
+// ...
 ```
 
 Response Methods Added
