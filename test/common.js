@@ -7,24 +7,6 @@ supertest = require('supertest');
 
 var server;
 
-response = function () {
-  var res = clone(expres.methods);
-  res.__proto__ = http.ServerResponse.prototype;
-  return res;
-};
-
-get = function (path, cb) {
-  request().get(path).set('Host', 'example.com').end(cb);
-};
-
-request = function () {
-  return supertest(server);
-};
-
-respond = function (cb) {
-  server.on('request', cb);
-};
-
 createServer = function (done) {
   server = http.createServer(expres.middleware).listen(9000, done);
 };
@@ -32,4 +14,22 @@ createServer = function (done) {
 closeServer = function (done) {
   server.close();
   done();
+};
+
+respond = function (cb) {
+  server.on('request', cb);
+};
+
+request = function () {
+  return supertest(server);
+};
+
+get = function (path, cb) {
+  request().get(path).set('Host', 'example.com').end(cb);
+};
+
+response = function () {
+  var res = clone(expres.methods);
+  res.__proto__ = http.ServerResponse.prototype;
+  return res;
 };
