@@ -6,7 +6,7 @@
   "dependencies": {},
   "devDependencies": {
     "mocha": "*",
-    "superagent": "~0.9.5",
+    "supertest": "~0.3.1",
     "clone": "~0.1.1"
   },
   "scripts": {

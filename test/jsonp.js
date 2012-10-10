@@ -9,7 +9,7 @@ describe('jsonp', function(){
         res.jsonp({ count: 1 });
       });
 
-      get('/?callback=something', function (res) {
+      get('/?callback=something', function (err, res) {
         assert.equal(res.headers['content-type'], 'text/javascript; charset=utf-8');
         assert.equal(res.text, 'something({\n  "count": 1\n});');
         done();
@@ -21,7 +21,7 @@ describe('jsonp', function(){
         res.jsonp({ count: 1 });
       });
 
-      get('/?callback=callbacks[123]', function (res) {
+      get('/?callback=callbacks[123]', function (err, res) {
         assert.equal(res.headers['content-type'], 'text/javascript; charset=utf-8');
         assert.equal(res.text, 'callbacks[123]({\n  "count": 1\n});');
         done();
@@ -33,7 +33,7 @@ describe('jsonp', function(){
         res.jsonp({});
       });
 
-      get('/?callback=foo;bar()', function (res) {
+      get('/?callback=foo;bar()', function (err, res) {
         assert.equal(res.headers['content-type'], 'text/javascript; charset=utf-8');
         assert.equal(res.text, 'foobar({});');
         done();
@@ -46,7 +46,7 @@ describe('jsonp', function(){
           res.jsonp(null);
         });
 
-        get('/', function (res) {
+        get('/', function (err, res) {
           assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
           assert.equal(res.text, 'null');
           done();
@@ -60,7 +60,7 @@ describe('jsonp', function(){
           res.jsonp(['foo', 'bar', 'baz']);
         });
 
-        get('/', function (res) {
+        get('/', function (err, res) {
           assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
           assert.equal(res.text, '[\n  "foo",\n  "bar",\n  "baz"\n]');
           done();
@@ -74,7 +74,7 @@ describe('jsonp', function(){
           res.jsonp({ name: 'tobi' });
         });
 
-        get('/', function (res) {
+        get('/', function (err, res) {
           assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
           assert.equal(res.text, '{\n  "name": "tobi"\n}');
           done();
@@ -89,7 +89,7 @@ describe('jsonp', function(){
         res.jsonp(201, { id: 1 });
       });
 
-      get('/', function (res) {
+      get('/', function (err, res) {
         assert.equal(res.statusCode, 201);
         assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
         assert.equal(res.text, '{\n  "id": 1\n}');
@@ -104,7 +104,7 @@ describe('jsonp', function(){
         res.jsonp({ id: 1 }, 201);
       });
 
-      get('/', function (res) {
+      get('/', function (err, res) {
         assert.equal(res.statusCode, 201);
         assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
         assert.equal(res.text, '{\n  "id": 1\n}');

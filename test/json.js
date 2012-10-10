@@ -9,7 +9,7 @@ describe('json', function () {
         res.json({ foo: 'bar' });
       });
 
-      get('/?callback=foo', function (res) {
+      get('/?callback=foo', function (err, res) {
         assert.equal(res.text, '{\n  "foo": "bar"\n}');
         done();
       });
@@ -21,7 +21,7 @@ describe('json', function () {
         res.json({ hello: 'world' });
       });
 
-      get('/', function (res) {
+      get('/', function (err, res) {
         assert.equal(res.statusCode, 200);
         assert.equal(res.headers['content-type'], 'application/vnd.example+json');
         done();
@@ -34,7 +34,7 @@ describe('json', function () {
           res.json(null);
         });
 
-        get('/', function (res){
+        get('/', function (err, res){
           assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
           assert.equal(res.text, 'null');
           done();
@@ -48,7 +48,7 @@ describe('json', function () {
           res.json(['foo', 'bar', 'baz']);
         });
 
-        get('/', function (res) {
+        get('/', function (err, res) {
           assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
           assert.equal(res.text, '[\n  "foo",\n  "bar",\n  "baz"\n]');
           done();
@@ -62,7 +62,7 @@ describe('json', function () {
           res.json({ name: 'tobi' });
         });
 
-        get('/', function (res) {
+        get('/', function (err, res) {
           assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
           assert.equal(res.text, '{\n  "name": "tobi"\n}');
           done();
@@ -77,7 +77,7 @@ describe('json', function () {
         res.json(201, { id: 1 });
       });
 
-      get('/', function (res) {
+      get('/', function (err, res) {
         assert.equal(res.statusCode, 201);
         assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
         assert.equal(res.text, '{\n  "id": 1\n}');
@@ -92,7 +92,7 @@ describe('json', function () {
         res.json({ id: 1 }, 201);
       });
 
-      get('/', function (res) {
+      get('/', function (err, res) {
         assert.equal(res.statusCode, 201);
         assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
         assert.equal(res.text, '{\n  "id": 1\n}');

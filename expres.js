@@ -1,5 +1,6 @@
-var url = require('url');
-var expres = module.exports = {};
+var url = require('url')
+  , utils = require('./utils')
+  , expres = module.exports = {};
 
 expres.middleware = function (req, res, next) {
   var ctx = res;
@@ -275,19 +276,19 @@ expres.methods = {
     if (fn) delete obj.default;
     var keys = Object.keys(obj);
 
-    var key = req.accepts(keys);
+    var key = utils.accepts(keys, req.headers['Accept'] || req.headers['accept']);
 
     this.set('Vary', 'Accept');
 
     if (key) {
-      this.set('Content-Type', normalizeType(key));
+      this.set('Content-Type', utils.normalizeType(key));
       obj[key](req, this, next);
     } else if (fn) {
       fn();
     } else {
       var err = new Error('Not Acceptable');
       err.status = 406;
-      err.types = normalizeTypes(keys);
+      err.types = utils.normalizeTypes(keys);
       next(err);
     }
 
@@ -359,57 +360,57 @@ expres.methods = {
    *
    *      res.redirect('/login');
    *
-   * @param {String} url
+   * @param {String} toUrl
    * @param {Number} code
    */
-  redirect: function(url){
+  redirect: function(toUrl){
     var req = this.req
       , head = 'HEAD' == req.method
       , status = 302
       , body;
 
-    // allow status / url
+    // allow status / toUrl
     if (2 == arguments.length) {
-      if ('number' == typeof url) {
-        status = url;
-        url = arguments[1];
+      if ('number' == typeof toUrl) {
+        status = toUrl;
+        toUrl = arguments[1];
       } else {
         status = arguments[1];
       }
     }
 
     // setup redirect map
-    var map = { back: req.get('Referrer') || '/' };
+    var map = { back: req.headers['Referrer'] || '/' };
 
     // perform redirect
-    url = map[url] || url;
+    toUrl = map[toUrl] || toUrl;
 
     // relative
-    if (!~url.indexOf('://') && 0 != url.indexOf('//')) {
+    if (!~toUrl.indexOf('://') && 0 != toUrl.indexOf('//')) {
       var path = '';
 
       // relative to path
-      if ('.' == url[0]) {
-        url = req.path + '/' + url;
-      // relative to mount-point
-      } else if ('/' != url[0]) {
-        url = path + '/' + url;
+      if ('.' == toUrl[0]) {
+        toUrl = url.parse(req.url).path + '/' + toUrl;
+      // relative to root
+      } else if ('/' != toUrl[0]) {
+        toUrl = '/' + toUrl;
       }
 
       // Absolute
-      var host = req.get('Host');
-      url = '//' + host + url;
+      var host = req.headers['host'] || req.headers['Host'];
+      toUrl = '//' + host + toUrl;
     }
 
     // Support text/{plain,html} by default
     this.format({
-      text: function(){
-        body = statusCodes[status] + '. Redirecting to ' + url;
+      'text/plain': function(){
+        body = http.STATUS_CODES[status] + '. Redirecting to ' + toUrl;
       },
 
-      html: function(){
-        var u = utils.escape(url);
-        body = '<p>' + statusCodes[status] + '. Redirecting to <a href="' + u + '">' + u + '</a></p>';
+      'text/html': function(){
+        var u = utils.escape(toUrl);
+        body = '<p>' + http.STATUS_CODES[status] + '. Redirecting to <a href="' + u + '">' + u + '</a></p>';
       },
 
       default: function(){
@@ -418,8 +419,8 @@ expres.methods = {
     });
 
     // Respond
-    this.statusCode = status;
-    this.set('Location', url);
+    this.status(status);
+    this.set('Location', toUrl);
     this.set('Content-Length', Buffer.byteLength(body));
     this.end(head ? null : body);
   }

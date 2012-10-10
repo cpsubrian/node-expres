@@ -3,7 +3,7 @@ util = require('util');
 http = require('http');
 expres = require('../');
 clone = require('clone');
-superagent = require('superagent');
+supertest = require('supertest');
 
 var server;
 
@@ -13,8 +13,12 @@ response = function () {
   return res;
 };
 
-get = function (path, cb, done) {
-  superagent.get('http://localhost:9000' + path, cb);
+get = function (path, cb) {
+  request().get(path).set('Host', 'example.com').end(cb);
+};
+
+request = function () {
+  return supertest(server);
 };
 
 respond = function (cb) {
