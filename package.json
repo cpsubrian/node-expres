@@ -1,6 +1,6 @@
 {
   "name": "expres",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Add express compatible methods to your response object",
   "main": "expres.js",
   "dependencies": {},
