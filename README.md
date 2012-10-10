@@ -22,8 +22,8 @@ Response Methods Added
 
 ### status(code)
 Set status `code`.
-@param {Number} code
-@return {ServerResponse}
+
+    res.status(400);
 
 ### links(links)
 
