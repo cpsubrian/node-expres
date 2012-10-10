@@ -78,13 +78,13 @@ you may alter this within the callback using `res.type()`
 or `res.set('Content-Type', ...)`.
 
     res.format({
-      'text/plain'(){
+      'text/plain': function () {
         res.send('hey');
       },
-      'text/html'(){
+      'text/html': function () {
         res.send('<p>hey</p>');
       },
-      'appliation/json'(){
+      'appliation/json': function () {
         res.send({ message: 'hey' });
       }
     });
