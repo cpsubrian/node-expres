@@ -5,7 +5,9 @@
   "main": "expres.js",
   "dependencies": {},
   "devDependencies": {
-    "mocha": "*"
+    "mocha": "*",
+    "superagent": "~0.9.5",
+    "clone": "~0.1.1"
   },
   "scripts": {
     "test": "make test"

@@ -1,9 +1,15 @@
 expres
 ======
 
-Add express compatible methods to your response object
+Add express compatible methods to a response object.
 
 [![build status](https://secure.travis-ci.org/cpsubrian/node-expres.png)](http://travis-ci.org/cpsubrian/node-expres)
+
+
+Credit
+------
+
+Many of the methods are copied verbatim from express, so, thanks TJ :)
 
 - - -
 
