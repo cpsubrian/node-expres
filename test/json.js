@@ -28,7 +28,7 @@ describe('json', function () {
       });
     });
 
-    describe('when given primitives', function (){
+    describe('when given primitives', function () {
       it('should respond with json', function (done){
         respond(function (req, res){
           res.json(null);
@@ -42,7 +42,7 @@ describe('json', function () {
       });
     });
 
-    describe('when given an array', function (){
+    describe('when given an array', function () {
       it('should respond with json', function (done){
         respond(function (req, res){
           res.json(['foo', 'bar', 'baz']);
@@ -56,7 +56,7 @@ describe('json', function () {
       });
     });
 
-    describe('when given an object', function (){
+    describe('when given an object', function () {
       it('should respond with json', function (done){
         respond(function (req, res){
           res.json({ name: 'tobi' });
@@ -71,7 +71,7 @@ describe('json', function () {
     });
   });
 
-  describe('.json(status, object)', function (){
+  describe('.json(status, object)', function () {
     it('should respond with json and set the .statusCode', function (done){
       respond(function (req, res){
         res.json(201, { id: 1 });
@@ -86,7 +86,7 @@ describe('json', function () {
     });
   });
 
-  describe('.json(object, status)', function (){
+  describe('.json(object, status)', function () {
     it('should respond with json and set the .statusCode for backwards compat', function (done){
       respond(function (req, res){
         res.json({ id: 1 }, 201);
