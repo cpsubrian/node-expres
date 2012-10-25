@@ -1,4 +1,5 @@
 var url = require('url')
+  , http = require('http')
   , utils = require('./utils')
   , expres = module.exports = {};
 
